@@ -7,7 +7,7 @@ import {
   getNetworkFromNetworkId,
   getTokensForNetwork,
 } from "@/utils/network";
-import { formatBalance } from "@/utils/formatters";
+import { formatBalance, convertAmountToWei } from "@/utils/formatters";
 import {
   ETHEREUM_REQUEST_METHODS,
   UNRECOGNIZED_NETWORK_ERROR_CODE,
@@ -16,11 +16,13 @@ import {
 import type {
   TAccount,
   TConnectionStatus,
+  TTransaction,
+  TTransactionStatus,
   TUnrecognizedNetworkError,
   TWalletContext,
 } from "@/types/wallet";
 import type { TNetwork, TToken, TTokenBalance } from "@/types/network";
-import { getUsdcBalance } from "@/utils/ethers";
+import { getUsdcBalance, sendUsdc } from "@/utils/ethers";
 
 const defaultWalletContext: TWalletContext = {
   account: null,
@@ -33,6 +35,7 @@ const defaultWalletContext: TWalletContext = {
   disconnectWallet: () => {},
   switchNetwork: async () => {},
   getTokenBalances: async () => {},
+  sendTransaction: async () => {},
 };
 
 export const WalletContext =
@@ -50,6 +53,8 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
   const [supportedTokens, setSupportedTokens] = useState<TToken[]>([]);
   const [tokenBalances, setTokenBalances] = useState<TTokenBalance[]>([]);
   const [isFetchingTokenBalances, setIsFetchingTokenBalances] = useState(false);
+  const [transactionStatus, setTransactionStatus] =
+    useState<TTransactionStatus | null>(null);
 
   const isMetaMaskInstalled =
     typeof window !== "undefined" && window.ethereum !== undefined;
@@ -63,6 +68,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
 
     try {
       setIsFetchingTokenBalances(true);
+      setTokenBalances([]);
       const tokens = getTokensForNetwork(currentNetwork);
       const balances: TTokenBalance[] = [];
 
@@ -200,6 +206,57 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     }
   }, [handleChainChange]);
 
+  const sendTransaction = async ({
+    recipient,
+    amount,
+    token,
+  }: TTransaction) => {
+    if (!isMetaMaskInstalled || !account) return;
+
+    setTransactionStatus("pending");
+    try {
+      let transactionHash: string;
+      if (token.isNative) {
+        const amountInWei = convertAmountToWei({ amount, decimals: 18 });
+        transactionHash = await window.ethereum?.request({
+          method: ETHEREUM_REQUEST_METHODS.ETH_SEND_TRANSACTION,
+          params: [
+            {
+              from: account,
+              to: recipient,
+              value: `0x${amountInWei}`,
+            },
+          ],
+        });
+      } else {
+        transactionHash = await sendUsdc({
+          recipient,
+          amount,
+          network: currentNetwork as TNetwork,
+          token,
+        });
+      }
+
+      setTransactionStatus("success");
+      notification.open({
+        message: "Transaction sent",
+        description: `Transaction hash: ${transactionHash}`,
+        type: "success",
+      });
+      // Refetch token balances
+      fetchTokenBalance();
+    } catch (error) {
+      setTransactionStatus("error");
+      notification.open({
+        message: "Error sending transaction",
+        description: (error as Error).message,
+        type: "error",
+      });
+    } finally {
+      setTransactionStatus(null);
+    }
+  };
+
   useEffect(() => {
     if (!isMetaMaskInstalled) {
       notification.open({
@@ -238,10 +295,12 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     supportedTokens,
     tokenBalances,
     isFetchingTokenBalances,
+    transactionStatus,
     connectWallet: checkConnection,
     disconnectWallet: handleDisconnect,
     switchNetwork,
     getTokenBalances: fetchTokenBalance,
+    sendTransaction,
   };
 
   return (

@@ -35,7 +35,11 @@ export const TokenBalance = () => {
               key={tokenBalance.token.symbol}
             >
               <Text>{tokenBalance.token.name}</Text>
-              <Text>{tokenBalance.formattedBalance}</Text>
+              <div>
+                <Text>
+                  {tokenBalance.formattedBalance} {tokenBalance.token.symbol}
+                </Text>
+              </div>
             </div>
           ))}
         </>

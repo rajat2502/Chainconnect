@@ -27,5 +27,15 @@ export const formatTokenAmount = ({
 };
 
 export const formatBalance = ({ amount, token }: TFormatTokenAmountProps) => {
-  return `${formatTokenAmount({ amount, token })} ${token.symbol}`;
+  return `${formatTokenAmount({ amount, token })}`;
+};
+
+export const convertAmountToWei = ({
+  amount,
+  decimals = 18,
+}: {
+  amount: string;
+  decimals?: number;
+}) => {
+  return BigInt(parseFloat(amount) * 10 ** decimals).toString(16);
 };

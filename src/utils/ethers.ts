@@ -1,13 +1,17 @@
 import { ethers } from "ethers";
+import type { TransactionReceipt, Eip1193Provider } from "ethers";
 
 import { getNetworkFromNetworkId } from "@/utils/network";
 import { USDC_ADDRESSES } from "@/constants/network";
+import { TTransaction } from "@/types/wallet";
 
 const erc20Abi = [
   // Function to get balance
   "function balanceOf(address owner) view returns (uint256)",
   // Function to get decimals
   "function decimals() view returns (uint8)",
+  // Function to transfer
+  "function transfer(address to, uint256 amount) returns (bool)",
 ];
 
 const defaultBalance = {
@@ -35,7 +39,9 @@ export const getUsdcBalance = async ({
       usdcContract.balanceOf(address),
       usdcContract.decimals(),
     ]);
-    const formattedBalance = ethers.formatUnits(balanceBigNumber, decimals);
+    const formattedBalance = parseFloat(
+      ethers.formatUnits(balanceBigNumber, decimals)
+    ).toFixed(2);
     return {
       balance: balanceBigNumber.toString(),
       formattedBalance,
@@ -43,5 +49,29 @@ export const getUsdcBalance = async ({
   } catch (error) {
     console.error("Error fetching USDC balance:", error);
     return defaultBalance;
+  }
+};
+
+export const sendUsdc = async ({
+  recipient,
+  amount,
+  network,
+}: TTransaction) => {
+  if (!network) return;
+
+  try {
+    const usdcAddress = USDC_ADDRESSES[network.id];
+    const provider = new ethers.BrowserProvider(
+      window.ethereum as Eip1193Provider
+    );
+    const signer = await provider.getSigner();
+    const usdcContract = new ethers.Contract(usdcAddress, erc20Abi, signer);
+    const decimals = await usdcContract.decimals();
+    const amountToSend = ethers.parseUnits(amount, decimals);
+    const transaction = await usdcContract.transfer(recipient, amountToSend);
+    const transactionReceipt: TransactionReceipt = await transaction.wait();
+    return transactionReceipt.hash;
+  } catch (error) {
+    console.error("Error sending USDC:", error);
   }
 };

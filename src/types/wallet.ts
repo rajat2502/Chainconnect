@@ -4,10 +4,19 @@ export type TAccount = string | null;
 
 export type TConnectionStatus = "connected" | "disconnected" | "connecting";
 
+export type TTransactionStatus = "pending" | "success" | "error";
+
 export type TUnrecognizedNetworkError = {
   code: number;
   message: string;
   stack: string;
+};
+
+export type TTransaction = {
+  recipient: string;
+  amount: string;
+  token: TToken;
+  network?: TNetwork;
 };
 
 export type TWalletContext = {
@@ -21,4 +30,5 @@ export type TWalletContext = {
   disconnectWallet: () => void;
   switchNetwork: (networkId: number) => Promise<void>;
   getTokenBalances: () => Promise<void>;
+  sendTransaction: (transaction: TTransaction) => Promise<void>;
 };

@@ -5,6 +5,7 @@ export const ETHEREUM_REQUEST_METHODS = {
   ADD_NETWORK: "wallet_addEthereumChain",
   ETH_GET_BALANCE: "eth_getBalance",
   ERC20_GET_BALANCE: "eth_getTokenBalance",
+  ETH_SEND_TRANSACTION: "eth_sendTransaction",
 } as const;
 
 export const UNRECOGNIZED_NETWORK_ERROR_CODE = 4902;
