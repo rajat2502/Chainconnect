@@ -58,76 +58,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     setAccount(accounts?.[0] || null);
   }, []);
 
-  const handleChainChange = useCallback((chainId: string) => {
-    const networkId = getNetworkIdFromChainId(chainId);
-    const network = getNetworkFromNetworkId(networkId);
-    setCurrentNetwork(network);
-    setSupportedTokens(getTokensForNetwork(network as TNetwork));
-    setTokenBalances([]);
-  }, []);
-
-  const handleDisconnect = useCallback(() => {
-    setAccount(null);
-    setCurrentNetwork(null);
-  }, []);
-
-  const handleAddNetwork = async (network: TNetwork) => {
-    try {
-      const chainId = getChainIdFromNetworkId(network.id);
-      await window.ethereum?.request({
-        method: ETHEREUM_REQUEST_METHODS.ADD_NETWORK,
-        params: [
-          {
-            chainId,
-            chainName: network.name,
-            nativeCurrency: {
-              name: network.symbol,
-              symbol: network.symbol,
-              decimals: 18,
-            },
-            rpcUrls: [network.rpcUrl],
-            blockExplorerUrls: [network.explorerUrl],
-          },
-        ],
-      });
-    } catch (addNetworkError) {
-      notification.open({
-        message: "Error adding network",
-        description: (addNetworkError as Error).message,
-        type: "error",
-      });
-    }
-  };
-
-  const switchNetwork = async (networkId: number) => {
-    const network = getNetworkFromNetworkId(networkId);
-
-    if (!isMetaMaskInstalled || !account) return;
-    if (!network) throw new Error("Network not supported");
-
-    try {
-      const chainId = getChainIdFromNetworkId(networkId);
-      await window.ethereum?.request({
-        method: ETHEREUM_REQUEST_METHODS.SWITCH_NETWORK,
-        params: [{ chainId }],
-      });
-    } catch (switchNetworkError) {
-      if (
-        (switchNetworkError as TUnrecognizedNetworkError).code ===
-        UNRECOGNIZED_NETWORK_ERROR_CODE
-      ) {
-        await handleAddNetwork(network);
-      } else {
-        notification.open({
-          message: "Error switching network",
-          description: (switchNetworkError as Error).message,
-          type: "error",
-        });
-      }
-    }
-  };
-
-  const fetchTokenBalance = async () => {
+  const fetchTokenBalance = useCallback(async () => {
     if (!isMetaMaskInstalled || !account || !currentNetwork) return;
 
     try {
@@ -171,6 +102,76 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
       });
     } finally {
       setIsFetchingTokenBalances(false);
+    }
+  }, [account, currentNetwork, isMetaMaskInstalled]);
+
+  const handleChainChange = useCallback(
+    (chainId: string) => {
+      const networkId = getNetworkIdFromChainId(chainId);
+      const network = getNetworkFromNetworkId(networkId);
+      setCurrentNetwork(network);
+      setSupportedTokens(getTokensForNetwork(network as TNetwork));
+      setTokenBalances([]);
+      fetchTokenBalance();
+    },
+    [fetchTokenBalance]
+  );
+
+  const handleDisconnect = useCallback(() => {
+    setAccount(null);
+    setCurrentNetwork(null);
+    setConnectionStatus("disconnected");
+  }, []);
+
+  const handleAddNetwork = async (network: TNetwork) => {
+    try {
+      const chainId = getChainIdFromNetworkId(network.id);
+      await window.ethereum?.request({
+        method: ETHEREUM_REQUEST_METHODS.ADD_NETWORK,
+        params: [
+          {
+            chainId,
+            chainName: network.name,
+            nativeCurrency: {
+              name: network.symbol,
+              symbol: network.symbol,
+              decimals: 18,
+            },
+            rpcUrls: [network.rpcUrl],
+            blockExplorerUrls: [network.explorerUrl],
+          },
+        ],
+      });
+    } catch (addNetworkError) {
+      console.error("Error while adding network:", addNetworkError);
+    }
+  };
+
+  const switchNetwork = async (networkId: number) => {
+    const network = getNetworkFromNetworkId(networkId);
+
+    if (!isMetaMaskInstalled || !account) return;
+    if (!network) throw new Error("Network not supported");
+
+    try {
+      const chainId = getChainIdFromNetworkId(networkId);
+      await window.ethereum?.request({
+        method: ETHEREUM_REQUEST_METHODS.SWITCH_NETWORK,
+        params: [{ chainId }],
+      });
+    } catch (switchNetworkError) {
+      if (
+        (switchNetworkError as TUnrecognizedNetworkError).code ===
+        UNRECOGNIZED_NETWORK_ERROR_CODE
+      ) {
+        await handleAddNetwork(network);
+      } else {
+        notification.open({
+          message: "Error switching network",
+          description: (switchNetworkError as Error).message,
+          type: "error",
+        });
+      }
     }
   };
 

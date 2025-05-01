@@ -1,25 +1,33 @@
 import { TNetwork } from "@/types/network";
 
+const ethereumRpcUrl = process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL;
+const gnosisRpcUrl = process.env.NEXT_PUBLIC_GNOSIS_RPC_URL;
+const polygonRpcUrl = process.env.NEXT_PUBLIC_POLYGON_RPC_URL;
+
+if (!ethereumRpcUrl || !gnosisRpcUrl || !polygonRpcUrl) {
+  throw new Error("RPC URLs are not set");
+}
+
 export const SUPPORTED_NETWORKS: TNetwork[] = [
   {
     id: 1,
     name: "Ethereum",
     symbol: "ETH",
-    rpcUrl: "https://ethereum.publicnode.com",
+    rpcUrl: ethereumRpcUrl,
     explorerUrl: "https://etherscan.io",
   },
   {
     id: 100,
     name: "Gnosis",
     symbol: "XDAI",
-    rpcUrl: "https://rpc.gnosischain.com",
+    rpcUrl: gnosisRpcUrl,
     explorerUrl: "https://gnosisscan.io",
   },
   {
     id: 137,
     name: "Polygon",
-    symbol: "MATIC",
-    rpcUrl: "https://polygon-mainnet.public.blastapi.io",
+    symbol: "POL",
+    rpcUrl: polygonRpcUrl,
     explorerUrl: "https://polygonscan.com",
   },
 ] as const;
