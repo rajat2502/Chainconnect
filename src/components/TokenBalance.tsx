@@ -12,8 +12,15 @@ export const TokenBalance = () => {
     tokenBalances,
     connectionStatus,
     isFetchingTokenBalances,
+    currentNetwork,
     getTokenBalances,
   } = useContext(WalletContext);
+
+  const handleRefreshTokenBalances = () => {
+    if (currentNetwork) {
+      getTokenBalances(currentNetwork);
+    }
+  };
 
   return (
     <div
@@ -29,7 +36,7 @@ export const TokenBalance = () => {
         <Refresh
           className={isFetchingTokenBalances ? "spin" : ""}
           style={{ cursor: "pointer" }}
-          onClick={getTokenBalances}
+          onClick={handleRefreshTokenBalances}
         />
       </div>
       {connectionStatus === "disconnected" && (

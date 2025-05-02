@@ -69,53 +69,56 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     setAccount(accounts?.[0] || null);
   }, []);
 
-  const fetchTokenBalance = useCallback(async () => {
-    if (!isMetaMaskInstalled || !account || !currentNetwork) return;
+  const fetchTokenBalance = useCallback(
+    async (network: TNetwork) => {
+      if (!isMetaMaskInstalled || !account || !network) return;
 
-    try {
-      setIsFetchingTokenBalances(true);
-      setTokenBalances([]);
-      const tokens = getTokensForNetwork(currentNetwork);
-      const balances: TTokenBalance[] = [];
+      try {
+        setIsFetchingTokenBalances(true);
+        setTokenBalances([]);
+        const tokens = getTokensForNetwork(network);
+        const balances: TTokenBalance[] = [];
 
-      for (const token of tokens) {
-        let balance: TTokenBalance;
+        for (const token of tokens) {
+          let balance: TTokenBalance;
 
-        if (token.isNative) {
-          const balanceBigInt: bigint = await window.ethereum?.request({
-            method: ETHEREUM_REQUEST_METHODS.ETH_GET_BALANCE,
-            params: [account, "latest"],
-          });
-          balance = {
-            token,
-            balance: balanceBigInt.toString(),
-            formattedBalance: formatBalance({ amount: balanceBigInt, token }),
-          };
-        } else {
-          const { balance: balanceAsString, formattedBalance } =
-            await getUsdcBalance({
-              address: account,
-              networkId: currentNetwork.id,
+          if (token.isNative) {
+            const balanceBigInt: bigint = await window.ethereum?.request({
+              method: ETHEREUM_REQUEST_METHODS.ETH_GET_BALANCE,
+              params: [account, "latest"],
             });
-          balance = {
-            token,
-            balance: balanceAsString,
-            formattedBalance,
-          };
+            balance = {
+              token,
+              balance: balanceBigInt.toString(),
+              formattedBalance: formatBalance({ amount: balanceBigInt, token }),
+            };
+          } else {
+            const { balance: balanceAsString, formattedBalance } =
+              await getUsdcBalance({
+                address: account,
+                networkId: network.id,
+              });
+            balance = {
+              token,
+              balance: balanceAsString,
+              formattedBalance,
+            };
+          }
+          balances.push(balance);
         }
-        balances.push(balance);
+        setTokenBalances(balances);
+      } catch (error) {
+        notification.open({
+          message: "Error fetching token balances",
+          description: (error as Error).message,
+          type: "error",
+        });
+      } finally {
+        setIsFetchingTokenBalances(false);
       }
-      setTokenBalances(balances);
-    } catch (error) {
-      notification.open({
-        message: "Error fetching token balances",
-        description: (error as Error).message,
-        type: "error",
-      });
-    } finally {
-      setIsFetchingTokenBalances(false);
-    }
-  }, [account, currentNetwork, isMetaMaskInstalled]);
+    },
+    [account, isMetaMaskInstalled]
+  );
 
   const handleChainChange = useCallback(
     (chainId: string) => {
@@ -124,7 +127,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
       setCurrentNetwork(network);
       setSupportedTokens(getTokensForNetwork(network as TNetwork));
       setTokenBalances([]);
-      fetchTokenBalance();
+      fetchTokenBalance(network as TNetwork);
     },
     [fetchTokenBalance]
   );
@@ -253,7 +256,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
         type: "success",
       });
       // Refetch token balances
-      fetchTokenBalance();
+      fetchTokenBalance(currentNetwork as TNetwork);
       return transactionHash;
     } catch (error) {
       setTransactionStatus("error");

@@ -30,6 +30,6 @@ export type TWalletContext = {
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   switchNetwork: (networkId: number) => Promise<void>;
-  getTokenBalances: () => Promise<void>;
+  getTokenBalances: (network: TNetwork) => Promise<void>;
   sendTransaction: (transaction: TTransaction) => Promise<string | null>;
 };
