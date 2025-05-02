@@ -124,7 +124,7 @@ export const TokenTransfer = () => {
       <Title level={4}>Transfer Token</Title>
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        style={{ display: "flex", flexDirection: "column", gap: "16px" }}
       >
         <div>
           <Input
@@ -168,7 +168,9 @@ export const TokenTransfer = () => {
           size='large'
           loading={transactionStatus === "pending"}
         >
-          {transactionStatus === "pending" ? "Transferring..." : "Transfer"}
+          {transactionStatus === "pending"
+            ? "Transferring..."
+            : "Transfer Tokens"}
         </Button>
       </form>
     </div>

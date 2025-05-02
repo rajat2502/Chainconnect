@@ -9,17 +9,17 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Multi-Chain Wallet</title>
+        <title>ChainConnect</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <link rel='icon' href='/favicon.ico' />
+        <link rel='icon' href='/assets/favicon.png' />
       </Head>
       <main>
         <Header />
         <div
           style={{
             display: "flex",
-            gap: "16px",
-            margin: "24px",
+            gap: "32px",
+            margin: "48px 120px",
           }}
         >
           <div
