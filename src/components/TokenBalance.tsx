@@ -24,7 +24,7 @@ export const TokenBalance = () => {
       {isFetchingTokenBalances && <Text>Fetching token balances...</Text>}
       {tokenBalances.length !== 0 && (
         <>
-          <Title level={5}>Your Token Balances:</Title>
+          <Title level={4}>Your Token Balances:</Title>
           {tokenBalances.map((tokenBalance) => (
             <div
               style={{

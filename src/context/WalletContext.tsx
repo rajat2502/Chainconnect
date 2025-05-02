@@ -23,6 +23,11 @@ import type {
 } from "@/types/wallet";
 import type { TNetwork, TToken, TTokenBalance } from "@/types/network";
 import { getUsdcBalance, sendUsdc } from "@/utils/ethers";
+import {
+  setItemFromLocalStorage,
+  getItemFromLocalStorage,
+  removeItemFromLocalStorage,
+} from "@/utils/storage";
 
 const defaultWalletContext: TWalletContext = {
   account: null,
@@ -127,6 +132,8 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     setAccount(null);
     setCurrentNetwork(null);
     setConnectionStatus("disconnected");
+    setTokenBalances([]);
+    setItemFromLocalStorage("manuallyDisconnected", "true");
   }, []);
 
   const handleAddNetwork = async (network: TNetwork) => {
@@ -183,6 +190,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
 
   const checkConnection = useCallback(async () => {
     try {
+      removeItemFromLocalStorage("manuallyDisconnected");
       setConnectionStatus("connecting");
       const accounts: TAccount[] = await window.ethereum?.request({
         method: ETHEREUM_REQUEST_METHODS.ETH_REQUEST_ACCOUNTS,
@@ -266,6 +274,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
       });
       return;
     }
+    if (getItemFromLocalStorage("manuallyDisconnected") === "true") return;
 
     checkConnection();
   }, [checkConnection, isMetaMaskInstalled]);

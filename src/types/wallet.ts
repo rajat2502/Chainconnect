@@ -2,7 +2,7 @@ import type { TNetwork, TToken, TTokenBalance } from "./network";
 
 export type TAccount = string | null;
 
-export type TConnectionStatus = "connected" | "disconnected" | "connecting";
+export type TConnectionStatus = "connecting" | "connected" | "disconnected";
 
 export type TTransactionStatus = "pending" | "success" | "error";
 

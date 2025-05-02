@@ -57,7 +57,7 @@ export const sendUsdc = async ({
   amount,
   network,
 }: TTransaction) => {
-  if (!network) return;
+  if (!network) return "";
 
   try {
     const usdcAddress = USDC_ADDRESSES[network.id];
@@ -73,5 +73,6 @@ export const sendUsdc = async ({
     return transactionReceipt.hash;
   } catch (error) {
     console.error("Error sending USDC:", error);
+    return "";
   }
 };
