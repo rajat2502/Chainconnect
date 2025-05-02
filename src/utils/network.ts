@@ -1,5 +1,6 @@
 import { SUPPORTED_NETWORKS, USDC_ADDRESSES } from "@/constants/network";
 
+import { Usdc } from "@/svgs/usdc";
 import type { TNetwork, TToken } from "@/types/network";
 
 export const getNetworkFromNetworkId = (networkId: number) =>
@@ -12,14 +13,14 @@ export const getChainIdFromNetworkId = (networkId: number) =>
   `0x${networkId.toString(16)}`;
 
 export const getNativeToken = (network: TNetwork): TToken => {
-  const { symbol, name } = network;
+  const { symbol, name, logo } = network;
   return {
     symbol,
     name,
     decimals: 18,
     address: null,
     isNative: true,
-    logo: null,
+    logo,
   };
 };
 
@@ -29,7 +30,7 @@ export const getUsdcToken = (network: TNetwork): TToken => ({
   decimals: 6,
   address: USDC_ADDRESSES[network.id],
   isNative: false,
-  logo: null,
+  logo: Usdc,
 });
 
 export const getTokensForNetwork = (network: TNetwork) => {

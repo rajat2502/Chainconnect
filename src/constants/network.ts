@@ -1,4 +1,8 @@
-import { TNetwork } from "@/types/network";
+import { Ethereum } from "@/svgs/ethereum";
+import { Xdai } from "@/svgs/xdai";
+import { Polygon } from "@/svgs/polygon";
+
+import type { TNetwork } from "@/types/network";
 
 const ethereumRpcUrl = process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL;
 const gnosisRpcUrl = process.env.NEXT_PUBLIC_GNOSIS_RPC_URL;
@@ -15,6 +19,7 @@ export const SUPPORTED_NETWORKS: TNetwork[] = [
     symbol: "ETH",
     rpcUrl: ethereumRpcUrl,
     explorerUrl: "https://etherscan.io",
+    logo: Ethereum,
   },
   {
     id: 100,
@@ -22,6 +27,7 @@ export const SUPPORTED_NETWORKS: TNetwork[] = [
     symbol: "XDAI",
     rpcUrl: gnosisRpcUrl,
     explorerUrl: "https://gnosisscan.io",
+    logo: Xdai,
   },
   {
     id: 137,
@@ -29,6 +35,7 @@ export const SUPPORTED_NETWORKS: TNetwork[] = [
     symbol: "POL",
     rpcUrl: polygonRpcUrl,
     explorerUrl: "https://polygonscan.com",
+    logo: Polygon,
   },
 ] as const;
 

@@ -4,6 +4,7 @@ export type TNetwork = {
   symbol: string;
   rpcUrl: string;
   explorerUrl: string;
+  logo: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 
 export type TToken = {
@@ -12,7 +13,7 @@ export type TToken = {
   decimals: number;
   address: string | null;
   isNative: boolean;
-  logo: string | null;
+  logo: React.ComponentType<React.SVGProps<SVGSVGElement>> | null;
 };
 
 export type TTokenBalance = {
