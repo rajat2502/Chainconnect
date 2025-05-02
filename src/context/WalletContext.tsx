@@ -7,7 +7,7 @@ import {
   getNetworkFromNetworkId,
   getTokensForNetwork,
 } from "@/utils/network";
-import { formatBalance, convertAmountToWei } from "@/utils/formatters";
+import { formatBalance } from "@/utils/formatters";
 import {
   ETHEREUM_REQUEST_METHODS,
   UNRECOGNIZED_NETWORK_ERROR_CODE,
@@ -22,7 +22,10 @@ import type {
   TWalletContext,
 } from "@/types/wallet";
 import type { TNetwork, TToken, TTokenBalance } from "@/types/network";
-import { getUsdcBalance, sendUsdc } from "@/utils/ethers";
+import {
+  getUsdcBalance,
+  sendTransaction as sendTransactionEthers,
+} from "@/utils/ethers";
 import {
   setItemFromLocalStorage,
   getItemFromLocalStorage,
@@ -227,36 +230,21 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
 
     setTransactionStatus("pending");
     try {
-      let transactionHash: string;
-      if (token.isNative) {
-        const amountInWei = convertAmountToWei({ amount, decimals: 18 });
-        transactionHash = await window.ethereum?.request({
-          method: ETHEREUM_REQUEST_METHODS.ETH_SEND_TRANSACTION,
-          params: [
-            {
-              from: account,
-              to: recipient,
-              value: `0x${amountInWei}`,
-            },
-          ],
-        });
-      } else {
-        transactionHash = await sendUsdc({
-          recipient,
-          amount,
-          network: currentNetwork as TNetwork,
-          token,
-        });
-      }
+      const transactionHash = await sendTransactionEthers({
+        recipient,
+        amount,
+        network: currentNetwork as TNetwork,
+        token,
+      });
 
+      // Refetch token balances
+      fetchTokenBalance(currentNetwork as TNetwork);
       setTransactionStatus("success");
       notification.open({
         message: "Transaction sent",
         description: `Transaction hash: ${transactionHash}`,
         type: "success",
       });
-      // Refetch token balances
-      fetchTokenBalance(currentNetwork as TNetwork);
       return transactionHash;
     } catch (error) {
       setTransactionStatus("error");
