@@ -36,11 +36,12 @@ const defaultWalletContext: TWalletContext = {
   supportedTokens: [],
   tokenBalances: [],
   isFetchingTokenBalances: false,
+  transactionStatus: null,
   connectWallet: async () => {},
   disconnectWallet: () => {},
   switchNetwork: async () => {},
   getTokenBalances: async () => {},
-  sendTransaction: async () => {},
+  sendTransaction: async () => null,
 };
 
 export const WalletContext =
@@ -219,7 +220,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     amount,
     token,
   }: TTransaction) => {
-    if (!isMetaMaskInstalled || !account) return;
+    if (!isMetaMaskInstalled || !account) return null;
 
     setTransactionStatus("pending");
     try {
@@ -253,6 +254,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
       });
       // Refetch token balances
       fetchTokenBalance();
+      return transactionHash;
     } catch (error) {
       setTransactionStatus("error");
       notification.open({
@@ -260,6 +262,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
         description: (error as Error).message,
         type: "error",
       });
+      return null;
     } finally {
       setTransactionStatus(null);
     }

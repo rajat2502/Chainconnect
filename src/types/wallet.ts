@@ -26,9 +26,10 @@ export type TWalletContext = {
   supportedTokens: TToken[];
   tokenBalances: TTokenBalance[];
   isFetchingTokenBalances: boolean;
+  transactionStatus: TTransactionStatus | null;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   switchNetwork: (networkId: number) => Promise<void>;
   getTokenBalances: () => Promise<void>;
-  sendTransaction: (transaction: TTransaction) => Promise<void>;
+  sendTransaction: (transaction: TTransaction) => Promise<string | null>;
 };
