@@ -5,6 +5,7 @@ export type TNetwork = {
   rpcUrl: string;
   explorerUrl: string;
   logo: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  colorCode: string;
 };
 
 export type TToken = {

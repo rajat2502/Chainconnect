@@ -20,6 +20,7 @@ export const SUPPORTED_NETWORKS: TNetwork[] = [
     rpcUrl: ethereumRpcUrl,
     explorerUrl: "https://etherscan.io",
     logo: Ethereum,
+    colorCode: "#627EEA",
   },
   {
     id: 100,
@@ -28,6 +29,7 @@ export const SUPPORTED_NETWORKS: TNetwork[] = [
     rpcUrl: gnosisRpcUrl,
     explorerUrl: "https://gnosisscan.io",
     logo: Xdai,
+    colorCode: "#48a9a6",
   },
   {
     id: 137,
@@ -36,6 +38,7 @@ export const SUPPORTED_NETWORKS: TNetwork[] = [
     rpcUrl: polygonRpcUrl,
     explorerUrl: "https://polygonscan.com",
     logo: Polygon,
+    colorCode: "#8247e5",
   },
 ] as const;
 

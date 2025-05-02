@@ -10,17 +10,30 @@ export const NetworkSelector = () => {
 
   if (!currentNetwork) return null;
   return (
-    <div style={{ display: "flex", gap: "16px" }}>
-      {SUPPORTED_NETWORKS.map((network) => (
-        <Button
-          type={currentNetwork?.id === network.id ? "primary" : "text"}
-          key={network.id}
-          onClick={() => switchNetwork(network.id)}
-          disabled={connectionStatus === "connecting"}
-        >
-          {network.name}
-        </Button>
-      ))}
+    <div style={{ display: "flex", gap: "12px" }}>
+      {SUPPORTED_NETWORKS.map((network) => {
+        const isCurrentNetwork = currentNetwork?.id === network.id;
+        return (
+          <Button
+            type={isCurrentNetwork ? "default" : "text"}
+            key={network.id}
+            onClick={() => switchNetwork(network.id)}
+            disabled={connectionStatus === "connecting"}
+          >
+            {!isCurrentNetwork && (
+              <div
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: network.colorCode,
+                  borderRadius: "50%",
+                }}
+              />
+            )}
+            {network.name}
+          </Button>
+        );
+      })}
     </div>
   );
 };

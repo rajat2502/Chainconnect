@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Typography } from "antd";
+import { Skeleton, Typography } from "antd";
 
 import { WalletContext } from "@/context/WalletContext";
 import { Refresh } from "@/svgs/refresh";
@@ -40,9 +40,11 @@ export const TokenBalance = () => {
         />
       </div>
       {connectionStatus === "disconnected" && (
-        <Text>Please connect your wallet to view your token balances</Text>
+        <div style={{ marginTop: "12px" }}>
+          <Text>Please connect your wallet to view your token balances.</Text>
+        </div>
       )}
-      {isFetchingTokenBalances && <Text>Fetching token balances...</Text>}
+      {isFetchingTokenBalances && <TokenBalancesSkeleton />}
       {tokenBalances.length !== 0 && (
         <ul>
           {tokenBalances.map((tokenBalance, index) => (
@@ -90,5 +92,35 @@ const TokenBalanceItem = ({
         </Text>
       </div>
     </li>
+  );
+};
+
+export const TokenBalancesSkeleton = () => {
+  return (
+    <ul style={{ listStyle: "none" }}>
+      {Array.from({ length: 2 }).map((_, index) => (
+        <li
+          key={index}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "16px 0",
+          }}
+        >
+          <Skeleton.Node
+            style={{
+              width: "120px",
+              height: "48px",
+              borderRadius: "12px",
+            }}
+            active
+          />
+          <Skeleton.Node
+            style={{ width: "120px", height: "48px", borderRadius: "12px" }}
+            active
+          />
+        </li>
+      ))}
+    </ul>
   );
 };
