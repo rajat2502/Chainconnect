@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { TokenBalance } from "@/components/TokenBalance";
 import { NetworkSelector } from "@/components/NetworkSelector";
 import { TokenTransfer } from "@/components/TokenTransfer";
+
 export default function Home() {
   return (
     <>
@@ -35,7 +36,6 @@ export default function Home() {
           <TokenTransfer />
         </div>
       </main>
-      <footer></footer>
     </>
   );
 }

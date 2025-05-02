@@ -30,27 +30,32 @@ export const TokenTransfer = () => {
     >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
       >
         <Input
           placeholder='Recipient'
           value={recipient}
           onChange={(e) => setRecipient(e.target.value)}
+          size='large'
         />
         <Input
           placeholder='Amount'
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          size='large'
         />
         <Select
+          placeholder='Select Token'
           options={supportedTokens.map((token) => ({
             label: token.name,
             value: token.name,
           }))}
           value={token}
           onChange={(value) => setToken(value)}
+          suffixIcon={"lol"}
+          size='large'
         />
-        <Button type='primary' htmlType='submit'>
+        <Button type='primary' htmlType='submit' size='large'>
           Transfer
         </Button>
       </form>
