@@ -13,6 +13,13 @@ import {
   UNRECOGNIZED_NETWORK_ERROR_CODE,
 } from "@/constants";
 
+import { getUSDCBalance } from "@/utils/ethereum";
+import { sendTransaction as sendTransactionEthers } from "@/utils/ethers";
+import {
+  setItemFromLocalStorage,
+  getItemFromLocalStorage,
+  removeItemFromLocalStorage,
+} from "@/utils/storage";
 import type {
   TAccount,
   TConnectionStatus,
@@ -22,15 +29,6 @@ import type {
   TWalletContext,
 } from "@/types/wallet";
 import type { TNetwork, TToken, TTokenBalance } from "@/types/network";
-import {
-  getUsdcBalance,
-  sendTransaction as sendTransactionEthers,
-} from "@/utils/ethers";
-import {
-  setItemFromLocalStorage,
-  getItemFromLocalStorage,
-  removeItemFromLocalStorage,
-} from "@/utils/storage";
 
 const defaultWalletContext: TWalletContext = {
   account: null,
@@ -97,10 +95,11 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
             };
           } else {
             const { balance: balanceAsString, formattedBalance } =
-              await getUsdcBalance({
-                address: account,
-                networkId: network.id,
+              await getUSDCBalance({
+                account,
+                network,
               });
+
             balance = {
               token,
               balance: balanceAsString,
