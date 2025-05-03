@@ -41,7 +41,6 @@ export const TokenTransfer = () => {
 
     const recipientError = getRecipientValidationError({
       recipient,
-      currentUser: account as string,
     });
     if (recipientError) {
       newErrors.recipient = recipientError;

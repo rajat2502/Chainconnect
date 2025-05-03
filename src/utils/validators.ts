@@ -2,18 +2,14 @@ import { ethers } from "ethers";
 
 export const getRecipientValidationError = ({
   recipient,
-  currentUser,
 }: {
   recipient: string;
-  currentUser: string;
 }) => {
   switch (true) {
     case !recipient:
       return "Recipient address is required";
     case !ethers.isAddress(recipient):
       return "Invalid recipient address";
-    case recipient.toLowerCase() === currentUser.toLowerCase():
-      return "Recipient cannot be the current user";
     default:
       return null;
   }
