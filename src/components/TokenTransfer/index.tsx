@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { CSSProperties, useContext, useState } from "react";
 import { Button, Input, Select, Typography } from "antd";
 
 import { DefaultMessage } from "@/components/ui/DefaultMessage";
@@ -8,18 +8,12 @@ import {
   getRecipientValidationError,
   getTokenValidationError,
 } from "@/utils/validators";
-
 import type { TToken } from "@/types/network";
 
-const { Text, Title } = Typography;
+import { ErrorMessage } from "./ErrorMessage";
+import { formStyles, selectWrapperStyles, wrapperStyles } from "./styles";
 
-const wrapperStyles = {
-  padding: "24px",
-  border: "1px solid #e0e0e0",
-  borderRadius: "12px",
-  minHeight: "120px",
-  flex: 1,
-};
+const { Title } = Typography;
 
 export const TokenTransfer = () => {
   const { account, supportedTokens, transactionStatus, sendTransaction } =
@@ -126,10 +120,7 @@ export const TokenTransfer = () => {
   return (
     <div style={wrapperStyles}>
       <Title level={4}>Transfer Token</Title>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-      >
+      <form onSubmit={handleSubmit} style={formStyles as CSSProperties}>
         <div>
           <Input
             placeholder='Recipient'
@@ -152,7 +143,7 @@ export const TokenTransfer = () => {
           />
           {errors.amount && <ErrorMessage error={errors.amount} />}
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={selectWrapperStyles as CSSProperties}>
           <Select
             placeholder='Select Token'
             value={formData.tokenName}
@@ -186,13 +177,5 @@ export const TokenTransfer = () => {
         </Button>
       </form>
     </div>
-  );
-};
-
-const ErrorMessage = ({ error }: { error: string }) => {
-  return (
-    <Text style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
-      {error}
-    </Text>
   );
 };

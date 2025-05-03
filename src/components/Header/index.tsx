@@ -1,9 +1,20 @@
 import React, { useContext } from "react";
 import Image from "next/image";
 import { Button, Layout, Tag, Typography } from "antd";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
-import { Disconnect } from "@/svgs/disconnect";
 import { WalletContext } from "@/context/WalletContext";
+import { Disconnect } from "@/svgs/disconnect";
+import { isDesktopScreen } from "@/utils/style";
+
+import {
+  connectedWrapperStyles,
+  disconnectButtonStyles,
+  headerLeftWrapperStyles,
+  headerWrapperDesktopStyles,
+  headerWrapperMobileStyles,
+  headerWrapperStyles,
+} from "./styles";
 
 const { Header: AntdHeader } = Layout;
 const { Text } = Typography;
@@ -16,19 +27,19 @@ export const Header = () => {
     connectWallet,
     disconnectWallet,
   } = useContext(WalletContext);
+  const screens = useBreakpoint();
+
+  const isDesktop = isDesktopScreen(screens);
 
   return (
     <AntdHeader
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "0 120px",
-        backgroundColor: "white",
-        borderBottom: "1px solid #e0e0e0",
-      }}
+      style={
+        isDesktop
+          ? { ...headerWrapperStyles, ...headerWrapperDesktopStyles }
+          : { ...headerWrapperStyles, ...headerWrapperMobileStyles }
+      }
     >
-      <div style={{ display: "flex", alignItems: "flex-end", gap: "12px" }}>
+      <div style={headerLeftWrapperStyles}>
         <Image
           src='/assets/logo.png'
           alt='ChainConnect'
@@ -52,18 +63,20 @@ export const Header = () => {
         </Button>
       )}
       {connectionStatus === "connected" && (
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Text>
-            {account?.slice(0, 8)}...{account?.slice(-6)}
-          </Text>
+        <div style={connectedWrapperStyles}>
+          {isDesktop && (
+            <Text>
+              {account?.slice(0, 8)}...{account?.slice(-6)}
+            </Text>
+          )}
           <Button
             onClick={disconnectWallet}
             variant='filled'
             color='danger'
-            style={{ gap: "4px" }}
+            style={disconnectButtonStyles}
           >
             <Disconnect />
-            Disconnect Wallet
+            {isDesktop && "Disconnect Wallet"}
           </Button>
         </div>
       )}
