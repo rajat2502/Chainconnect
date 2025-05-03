@@ -7,6 +7,7 @@ import { DashboardLeftWrapper } from "@/components/ui/DashboardLeftWrapper";
 import { NetworkSelector } from "@/components/NetworkSelector";
 import { TokenBalance } from "@/components/TokenBalance";
 import { TokenTransfer } from "@/components/TokenTransfer";
+import { TransactionHistory } from "@/components/TransactionHistory";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
@@ -29,6 +30,7 @@ export default function Home() {
             <TokenBalance />
           </DashboardLeftWrapper>
           <TokenTransfer />
+          <TransactionHistory />
         </DashboardWrapper>
         <Footer />
       </MainWrapper>

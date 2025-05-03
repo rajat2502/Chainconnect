@@ -6,6 +6,7 @@ const { Text } = Typography;
 export const Footer = () => {
   return (
     <AntdFooter
+      className='footer'
       style={{
         textAlign: "center",
         height: "auto",

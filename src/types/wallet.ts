@@ -19,6 +19,10 @@ export type TTransaction = {
   network?: TNetwork;
 };
 
+export type TTransactionHistory = TTransaction & {
+  hash: string;
+};
+
 export type TWalletContext = {
   account: TAccount;
   currentNetwork: TNetwork | null;
@@ -27,6 +31,7 @@ export type TWalletContext = {
   tokenBalances: TTokenBalance[];
   isFetchingTokenBalances: boolean;
   transactionStatus: TTransactionStatus | null;
+  transactionsHistory: TTransactionHistory[];
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   switchNetwork: (networkId: number) => Promise<void>;

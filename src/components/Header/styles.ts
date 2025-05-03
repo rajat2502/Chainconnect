@@ -22,3 +22,12 @@ export const connectedWrapperStyles = {
 export const disconnectButtonStyles = {
   gap: "4px",
 };
+
+export const openInNewStyles = {
+  marginLeft: 4,
+  cursor: "pointer",
+};
+
+export const copyAddressStyles = {
+  cursor: "copy",
+};

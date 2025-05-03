@@ -14,6 +14,7 @@ export type TToken = {
   decimals: number;
   address: string | null;
   isNative: boolean;
+  network: string;
   logo: React.ComponentType<React.SVGProps<SVGSVGElement>> | null;
 };
 

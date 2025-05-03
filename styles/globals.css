@@ -23,6 +23,10 @@ a {
   text-decoration: none;
 }
 
+ul {
+  list-style: none;
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -37,15 +41,18 @@ a {
 }
 
 .dashboard-wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 32px;
   flex-wrap: wrap;
   padding: 48px 120px;
-  flex: 1;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 
   @media (max-width: 768px) {
     padding: 48px 24px;
-    flex: unset;
   }
 }
 
@@ -60,5 +67,13 @@ a {
 
   @media (max-width: 768px) {
     padding: 0 16px;
+  }
+}
+
+.footer {
+  @media (min-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
   }
 }

@@ -29,6 +29,7 @@ import type {
   TAccount,
   TConnectionStatus,
   TTransaction,
+  TTransactionHistory,
   TTransactionStatus,
   TUnrecognizedNetworkError,
   TWalletContext,
@@ -43,6 +44,7 @@ const defaultWalletContext: TWalletContext = {
   tokenBalances: [],
   isFetchingTokenBalances: false,
   transactionStatus: null,
+  transactionsHistory: [],
   connectWallet: async () => {},
   disconnectWallet: () => {},
   switchNetwork: async () => {},
@@ -67,6 +69,9 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
   const [isFetchingTokenBalances, setIsFetchingTokenBalances] = useState(false);
   const [transactionStatus, setTransactionStatus] =
     useState<TTransactionStatus | null>(null);
+  const [transactionsHistory, setTransactionsHistory] = useState<
+    TTransactionHistory[]
+  >([]);
 
   const isMetaMaskInstalled =
     typeof window !== "undefined" && window.ethereum !== undefined;
@@ -208,6 +213,23 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     }
   }, [handleChainChange]);
 
+  const saveTransactionToHistory = ({
+    recipient,
+    amount,
+    token,
+    hash,
+  }: TTransactionHistory) => {
+    const newTransactionsHistory = [
+      { recipient, amount, token, hash },
+      ...transactionsHistory,
+    ];
+    setTransactionsHistory(newTransactionsHistory);
+    setItemFromLocalStorage(
+      "transactionsHistory",
+      JSON.stringify(newTransactionsHistory)
+    );
+  };
+
   const sendTransaction = async ({
     recipient,
     amount,
@@ -232,6 +254,12 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
           message: "Transaction sent",
           description: `Transaction hash: ${transactionHash}`,
           type: "success",
+        });
+        saveTransactionToHistory({
+          recipient,
+          amount,
+          token,
+          hash: transactionHash,
         });
         return transactionHash;
       } else {
@@ -279,6 +307,13 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     handleDisconnect,
   ]);
 
+  useEffect(() => {
+    const transactionsHistory = getItemFromLocalStorage("transactionsHistory");
+    if (transactionsHistory) {
+      setTransactionsHistory(JSON.parse(transactionsHistory));
+    }
+  }, []);
+
   const value = {
     account,
     currentNetwork,
@@ -287,6 +322,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     tokenBalances,
     isFetchingTokenBalances,
     transactionStatus,
+    transactionsHistory,
     connectWallet: checkConnection,
     disconnectWallet: handleDisconnect,
     switchNetwork,

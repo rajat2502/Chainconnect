@@ -27,6 +27,7 @@ export const getNativeToken = (network: TNetwork): TToken => {
     decimals: 18,
     address: null,
     isNative: true,
+    network: network.name,
     logo,
   };
 };
@@ -37,6 +38,7 @@ export const getUsdcToken = (network: TNetwork): TToken => ({
   decimals: 6,
   address: USDC_ADDRESSES[network.id],
   isNative: false,
+  network: network.name,
   logo: Usdc,
 });
 
