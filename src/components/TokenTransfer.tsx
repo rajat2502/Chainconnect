@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Button, Input, Select, Typography } from "antd";
 
+import { DefaultMessage } from "@/components/ui/DefaultMessage";
 import { WalletContext } from "@/context/WalletContext";
 import {
   getAmountValidationError,
@@ -114,7 +115,10 @@ export const TokenTransfer = () => {
     return (
       <div style={wrapperStyles}>
         <Title level={4}>Transfer Token</Title>
-        <Text>Please connect your wallet to transfer tokens</Text>
+        <DefaultMessage
+          marginTop={24}
+          message='Please connect your wallet to transfer tokens.'
+        />
       </div>
     );
   }
@@ -151,15 +155,23 @@ export const TokenTransfer = () => {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Select
             placeholder='Select Token'
-            options={supportedTokens.map((token) => ({
-              label: token.name,
-              value: token.name,
-            }))}
             value={formData.tokenName}
             onChange={handleTokenChange}
             size='large'
             status={errors.tokenName ? "error" : undefined}
-          />
+          >
+            {supportedTokens.map((token) => (
+              <Select.Option
+                key={token.name}
+                value={token.name}
+                style={{
+                  padding: "12px",
+                }}
+              >
+                {token.symbol}
+              </Select.Option>
+            ))}
+          </Select>
           {errors.tokenName && <ErrorMessage error={errors.tokenName} />}
         </div>
         <Button

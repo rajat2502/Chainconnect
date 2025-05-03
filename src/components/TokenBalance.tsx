@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Skeleton, Typography } from "antd";
 
 import { WalletContext } from "@/context/WalletContext";
+import { DefaultMessage } from "@/components/ui/DefaultMessage";
 import { Refresh } from "@/svgs/refresh";
 import type { TTokenBalance } from "@/types/network";
 
@@ -9,6 +10,7 @@ const { Title, Text } = Typography;
 
 export const TokenBalance = () => {
   const {
+    account,
     tokenBalances,
     connectionStatus,
     isFetchingTokenBalances,
@@ -35,14 +37,12 @@ export const TokenBalance = () => {
         <Title level={4}>Your Token Balances</Title>
         <Refresh
           className={isFetchingTokenBalances ? "spin" : ""}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: account ? "pointer" : "not-allowed" }}
           onClick={handleRefreshTokenBalances}
         />
       </div>
       {connectionStatus === "disconnected" && (
-        <div style={{ marginTop: "12px" }}>
-          <Text>Please connect your wallet to view your token balances.</Text>
-        </div>
+        <DefaultMessage message='Please connect your wallet to view your token balances.' />
       )}
       {isFetchingTokenBalances && <TokenBalancesSkeleton />}
       {tokenBalances.length !== 0 && (
