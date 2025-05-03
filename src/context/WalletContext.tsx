@@ -7,13 +7,18 @@ import {
   getNetworkFromNetworkId,
   getTokensForNetwork,
 } from "@/utils/network";
-import { formatBalance } from "@/utils/formatters";
 import {
   ETHEREUM_REQUEST_METHODS,
   UNRECOGNIZED_NETWORK_ERROR_CODE,
 } from "@/constants";
 
-import { getUSDCBalance } from "@/utils/ethereum";
+import {
+  addNetworkToMetaMask,
+  getAccountsFromMetamask,
+  getNativeTokenBalance,
+  getUSDCBalance,
+  switchNetworkOnMetamask,
+} from "@/utils/ethereum";
 import { sendTransaction as sendTransactionEthers } from "@/utils/ethers";
 import {
   setItemFromLocalStorage,
@@ -84,26 +89,13 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
           let balance: TTokenBalance;
 
           if (token.isNative) {
-            const balanceBigInt: bigint = await window.ethereum?.request({
-              method: ETHEREUM_REQUEST_METHODS.ETH_GET_BALANCE,
-              params: [account, "latest"],
-            });
-            balance = {
-              token,
-              balance: balanceBigInt.toString(),
-              formattedBalance: formatBalance({ amount: balanceBigInt, token }),
-            };
+            balance = await getNativeTokenBalance({ account, token });
           } else {
-            const { balance: balanceAsString, formattedBalance } =
-              await getUSDCBalance({
-                account,
-                network,
-              });
-            balance = {
+            balance = (await getUSDCBalance({
+              account,
+              network,
               token,
-              balance: balanceAsString,
-              formattedBalance,
-            };
+            })) as TTokenBalance;
           }
           balances.push(balance);
         }
@@ -152,22 +144,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
   const handleAddNetwork = async (network: TNetwork) => {
     try {
       const chainId = getChainIdFromNetworkId(network.id);
-      await window.ethereum?.request({
-        method: ETHEREUM_REQUEST_METHODS.ADD_NETWORK,
-        params: [
-          {
-            chainId,
-            chainName: network.name,
-            nativeCurrency: {
-              name: network.symbol,
-              symbol: network.symbol,
-              decimals: 18,
-            },
-            rpcUrls: [network.rpcUrl],
-            blockExplorerUrls: [network.explorerUrl],
-          },
-        ],
-      });
+      await addNetworkToMetaMask({ chainId, network });
     } catch (addNetworkError) {
       console.error("Error while adding network:", addNetworkError);
     }
@@ -181,10 +158,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
 
     try {
       const chainId = getChainIdFromNetworkId(networkId);
-      await window.ethereum?.request({
-        method: ETHEREUM_REQUEST_METHODS.SWITCH_NETWORK,
-        params: [{ chainId }],
-      });
+      await switchNetworkOnMetamask({ chainId });
     } catch (switchNetworkError) {
       if (
         (switchNetworkError as TUnrecognizedNetworkError).code ===
@@ -215,10 +189,7 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
       removeItemFromLocalStorage("manuallyDisconnected");
       setItemFromLocalStorage("hasUserConnected", "true");
       setConnectionStatus("connecting");
-      const accounts: TAccount[] = await window.ethereum?.request({
-        method: ETHEREUM_REQUEST_METHODS.ETH_REQUEST_ACCOUNTS,
-      });
-
+      const accounts: TAccount[] = await getAccountsFromMetamask();
       if (!accounts.length) throw new Error("No accounts found");
 
       const chainId = await window.ethereum?.request({
