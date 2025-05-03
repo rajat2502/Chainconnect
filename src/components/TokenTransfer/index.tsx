@@ -8,7 +8,7 @@ import {
   getRecipientValidationError,
   getTokenValidationError,
 } from "@/utils/validators";
-import type { TToken } from "@/types/network";
+import type { TToken, TTokenBalance } from "@/types/network";
 
 import { ErrorMessage } from "./ErrorMessage";
 import { formStyles, selectWrapperStyles, wrapperStyles } from "./styles";
@@ -21,6 +21,7 @@ export const TokenTransfer = () => {
     currentNetwork,
     supportedTokens,
     transactionStatus,
+    tokenBalances,
     sendTransaction,
   } = useContext(WalletContext);
 
@@ -46,7 +47,13 @@ export const TokenTransfer = () => {
       newErrors.recipient = recipientError;
     }
 
-    const amountError = getAmountValidationError({ amount });
+    const tokenBalance = tokenBalances.find(
+      (balance) => balance.token.name === tokenName
+    ) as TTokenBalance;
+    const amountError = getAmountValidationError({
+      amount,
+      tokenBalance,
+    });
     if (amountError) {
       newErrors.amount = amountError;
     }
@@ -109,14 +116,14 @@ export const TokenTransfer = () => {
     });
   };
 
-  if (!account || currentNetwork?.name === "Unsupported") {
+  if (!account || currentNetwork?.name === "UNSUPPORTED") {
     return (
       <div style={wrapperStyles}>
         <Title level={4}>Transfer Token</Title>
         <DefaultMessage
           marginTop={24}
           message={
-            currentNetwork?.name === "Unsupported"
+            currentNetwork?.name === "UNSUPPORTED"
               ? "Please connect to a supported network to transfer tokens."
               : "Please connect your wallet to transfer tokens."
           }

@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
 
+import type { TTokenBalance } from "@/types/network";
+
 export const getRecipientValidationError = ({
   recipient,
 }: {
@@ -15,12 +17,20 @@ export const getRecipientValidationError = ({
   }
 };
 
-export const getAmountValidationError = ({ amount }: { amount: string }) => {
+export const getAmountValidationError = ({
+  amount,
+  tokenBalance,
+}: {
+  amount: string;
+  tokenBalance: TTokenBalance;
+}) => {
   switch (true) {
     case !amount:
       return "Amount is required";
     case isNaN(Number(amount)) || Number(amount) <= 0:
       return "Invalid amount (must be greater than 0)";
+    case Number(amount) > Number(tokenBalance.formattedBalance):
+      return "Amount is greater than the token balance in your wallet";
     default:
       return null;
   }

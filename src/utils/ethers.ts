@@ -1,12 +1,15 @@
+import { notification } from "antd";
 import { ethers } from "ethers";
-import type { TransactionReceipt, Eip1193Provider } from "ethers";
+import type {
+  TransactionReceipt,
+  Eip1193Provider,
+  ActionRejectedError,
+} from "ethers";
 
 import { USDC_ADDRESSES } from "@/constants/network";
 import type { TTransaction } from "@/types/wallet";
 
 const erc20Abi = [
-  // Function to get balance
-  "function balanceOf(address owner) view returns (uint256)",
   // Function to get decimals
   "function decimals() view returns (uint8)",
   // Function to transfer
@@ -47,7 +50,13 @@ export const sendTransaction = async ({
 
     return transactionReceipt?.hash ?? "";
   } catch (error) {
-    console.error("Error sending transaction:", error);
+    notification.open({
+      message: "Transaction failed",
+      description:
+        (error as ActionRejectedError)?.info?.error?.message ??
+        "Error while sending transaction",
+      type: "error",
+    });
     return "";
   }
 };

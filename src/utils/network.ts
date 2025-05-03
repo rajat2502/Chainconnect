@@ -8,7 +8,7 @@ export const getNetworkFromNetworkId = (networkId: number) => {
     (network) => network.id === networkId
   );
   if (!network) {
-    return { id: networkId, name: "Unsupported" } as TNetwork;
+    return { id: networkId, name: "UNSUPPORTED" } as TNetwork;
   }
   return network;
 };
