@@ -8,3 +8,9 @@ export const ETHEREUM_REQUEST_METHODS = {
 } as const;
 
 export const UNRECOGNIZED_NETWORK_ERROR_CODE = 4902;
+
+export const COINGECKO_PLATFORM_CHAIN_MAPPING = {
+  Ethereum: "ethereum",
+  Gnosis: "xdai",
+  Polygon: "polygon-pos",
+};

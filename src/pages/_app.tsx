@@ -3,7 +3,8 @@ import { ConfigProvider } from "antd";
 
 import { WalletProvider } from "@/context/WalletContext";
 import { theme } from "@/config/theme";
-import "@/styles/globals.css";
+
+import "styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
