@@ -45,5 +45,5 @@ export const SUPPORTED_NETWORKS: TNetwork[] = [
 export const USDC_ADDRESSES: Record<number, string> = {
   [1]: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   [100]: "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83",
-  [137]: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  [137]: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
 };
