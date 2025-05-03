@@ -1,22 +1,17 @@
 import React, { useContext } from "react";
 import Image from "next/image";
-import { Button, Layout, Tag, Typography } from "antd";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { Button, Tag, Typography } from "antd";
 
 import { WalletContext } from "@/context/WalletContext";
 import { Disconnect } from "@/svgs/disconnect";
-import { isDesktopScreen } from "@/utils/style";
 
 import {
   connectedWrapperStyles,
   disconnectButtonStyles,
   headerLeftWrapperStyles,
-  headerWrapperDesktopStyles,
-  headerWrapperMobileStyles,
   headerWrapperStyles,
 } from "./styles";
 
-const { Header: AntdHeader } = Layout;
 const { Text } = Typography;
 
 export const Header = () => {
@@ -27,18 +22,9 @@ export const Header = () => {
     connectWallet,
     disconnectWallet,
   } = useContext(WalletContext);
-  const screens = useBreakpoint();
-
-  const isDesktop = isDesktopScreen(screens);
 
   return (
-    <AntdHeader
-      style={
-        isDesktop
-          ? { ...headerWrapperStyles, ...headerWrapperDesktopStyles }
-          : { ...headerWrapperStyles, ...headerWrapperMobileStyles }
-      }
-    >
+    <div className='header-wrapper' style={headerWrapperStyles}>
       <div style={headerLeftWrapperStyles}>
         <Image
           src='/assets/logo.png'
@@ -54,7 +40,8 @@ export const Header = () => {
         connectionStatus === "connecting") && (
         <Button
           onClick={connectWallet}
-          type='primary'
+          color='purple'
+          variant='filled'
           loading={connectionStatus === "connecting"}
         >
           {connectionStatus === "connecting"
@@ -64,11 +51,9 @@ export const Header = () => {
       )}
       {connectionStatus === "connected" && (
         <div style={connectedWrapperStyles}>
-          {isDesktop && (
-            <Text>
-              {account?.slice(0, 8)}...{account?.slice(-6)}
-            </Text>
-          )}
+          <Text className='mobile-display-none'>
+            {account?.slice(0, 8)}...{account?.slice(-6)}
+          </Text>
           <Button
             onClick={disconnectWallet}
             variant='filled'
@@ -76,10 +61,10 @@ export const Header = () => {
             style={disconnectButtonStyles}
           >
             <Disconnect />
-            {isDesktop && "Disconnect Wallet"}
+            <span className='mobile-display-none'>Disconnect Wallet</span>
           </Button>
         </div>
       )}
-    </AntdHeader>
+    </div>
   );
 };

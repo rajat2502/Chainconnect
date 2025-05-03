@@ -4,14 +4,7 @@ export const headerWrapperStyles = {
   alignItems: "center",
   backgroundColor: "white",
   borderBottom: "1px solid #e0e0e0",
-};
-
-export const headerWrapperDesktopStyles = {
-  padding: "0 120px",
-};
-
-export const headerWrapperMobileStyles = {
-  padding: "0 16px",
+  height: "64px",
 };
 
 export const headerLeftWrapperStyles = {
