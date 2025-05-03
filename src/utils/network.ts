@@ -3,8 +3,15 @@ import { SUPPORTED_NETWORKS, USDC_ADDRESSES } from "@/constants/network";
 import { Usdc } from "@/svgs/usdc";
 import type { TNetwork, TToken } from "@/types/network";
 
-export const getNetworkFromNetworkId = (networkId: number) =>
-  SUPPORTED_NETWORKS.find((network) => network.id === networkId) || null;
+export const getNetworkFromNetworkId = (networkId: number) => {
+  const network = SUPPORTED_NETWORKS.find(
+    (network) => network.id === networkId
+  );
+  if (!network) {
+    return { id: networkId, name: "Unsupported" } as TNetwork;
+  }
+  return network;
+};
 
 export const getNetworkIdFromChainId = (chainId: string) =>
   parseInt(chainId, 16);

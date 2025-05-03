@@ -15,6 +15,10 @@ export default function Home() {
       <Head>
         <title>ChainConnect</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta
+          name='description'
+          content='ChainConnect is a platform for connecting to different blockchains.'
+        />
         <link rel='icon' href='/assets/favicon.png' />
       </Head>
       <MainWrapper>

@@ -45,6 +45,10 @@ export const TokenBalance = () => {
         <DefaultMessage message='Please connect your wallet to view your token balances.' />
       )}
 
+      {currentNetwork?.name === "Unsupported" && (
+        <DefaultMessage message='Please connect to a supported network to view your token balances.' />
+      )}
+
       {isFetchingTokenBalances && <TokenBalancesSkeleton />}
 
       {tokenBalances.length !== 0 && (

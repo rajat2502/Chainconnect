@@ -16,8 +16,13 @@ import { formStyles, selectWrapperStyles, wrapperStyles } from "./styles";
 const { Title } = Typography;
 
 export const TokenTransfer = () => {
-  const { account, supportedTokens, transactionStatus, sendTransaction } =
-    useContext(WalletContext);
+  const {
+    account,
+    currentNetwork,
+    supportedTokens,
+    transactionStatus,
+    sendTransaction,
+  } = useContext(WalletContext);
 
   const [formData, setFormData] = useState<{
     recipient: string;
@@ -105,13 +110,17 @@ export const TokenTransfer = () => {
     });
   };
 
-  if (!account) {
+  if (!account || currentNetwork?.name === "Unsupported") {
     return (
       <div style={wrapperStyles}>
         <Title level={4}>Transfer Token</Title>
         <DefaultMessage
           marginTop={24}
-          message='Please connect your wallet to transfer tokens.'
+          message={
+            currentNetwork?.name === "Unsupported"
+              ? "Please connect to a supported network to transfer tokens."
+              : "Please connect your wallet to transfer tokens."
+          }
         />
       </div>
     );

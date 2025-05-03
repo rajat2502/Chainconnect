@@ -127,6 +127,14 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
     (chainId: string) => {
       const networkId = getNetworkIdFromChainId(chainId);
       const network = getNetworkFromNetworkId(networkId);
+
+      if (network.name === "Unsupported") {
+        setCurrentNetwork(network);
+        setSupportedTokens([]);
+        setTokenBalances([]);
+        return;
+      }
+
       setCurrentNetwork(network);
       setSupportedTokens(getTokensForNetwork(network as TNetwork));
       setTokenBalances([]);
