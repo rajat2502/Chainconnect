@@ -196,8 +196,18 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
   };
 
   const checkConnection = useCallback(async () => {
+    if (!isMetaMaskInstalled) {
+      notification.open({
+        message: "MetaMask is not installed",
+        description: "Please install MetaMask to use this app",
+        type: "error",
+      });
+      return;
+    }
+
     try {
       removeItemFromLocalStorage("manuallyDisconnected");
+      setItemFromLocalStorage("hasUserConnected", "true");
       setConnectionStatus("connecting");
       const accounts: TAccount[] = await window.ethereum?.request({
         method: ETHEREUM_REQUEST_METHODS.ETH_REQUEST_ACCOUNTS,
@@ -260,15 +270,11 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
   };
 
   useEffect(() => {
-    if (!isMetaMaskInstalled) {
-      notification.open({
-        message: "MetaMask is not installed",
-        description: "Please install MetaMask to use this app",
-        type: "error",
-      });
+    if (
+      !getItemFromLocalStorage("hasUserConnected") ||
+      getItemFromLocalStorage("manuallyDisconnected") === "true"
+    )
       return;
-    }
-    if (getItemFromLocalStorage("manuallyDisconnected") === "true") return;
 
     checkConnection();
   }, [checkConnection, isMetaMaskInstalled]);
