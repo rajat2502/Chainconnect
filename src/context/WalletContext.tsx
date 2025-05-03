@@ -255,14 +255,19 @@ export const WalletProvider = ({ children }: TWalletProviderProps) => {
       });
 
       // Refetch token balances
-      fetchTokenBalance(currentNetwork as TNetwork);
-      setTransactionStatus("success");
-      notification.open({
-        message: "Transaction sent",
-        description: `Transaction hash: ${transactionHash}`,
-        type: "success",
-      });
-      return transactionHash;
+      if (!!transactionHash) {
+        fetchTokenBalance(currentNetwork as TNetwork);
+        setTransactionStatus("success");
+        notification.open({
+          message: "Transaction sent",
+          description: `Transaction hash: ${transactionHash}`,
+          type: "success",
+        });
+        return transactionHash;
+      } else {
+        setTransactionStatus("error");
+        return null;
+      }
     } catch (error) {
       setTransactionStatus("error");
       notification.open({
