@@ -4,7 +4,7 @@ export const headerWrapperStyles = {
   alignItems: "center",
   backgroundColor: "white",
   borderBottom: "1px solid #e0e0e0",
-  height: "64px",
+  height: "72px",
 };
 
 export const headerLeftWrapperStyles = {

@@ -8,9 +8,14 @@ export const wrapperStyles = {
 
 export const historyItemStyles = {
   display: "flex",
+  justifyContent: "space-between",
+  padding: "16px",
+};
+
+export const historyItemContentStyles = {
+  display: "flex",
   alignItems: "center",
   gap: "16px",
-  padding: "16px",
 };
 
 export const historyItemTextStyles = {
@@ -39,4 +44,12 @@ export const recipientStyles = {
   fontSize: "14px",
   fontWeight: "400",
   color: "#64748b",
+};
+
+export const copyHashButtonStyles = {
+  marginTop: 8,
+  backgroundColor: "#f8f9fa",
+  borderColor: "#e0e0e0",
+  color: "#64748b",
+  width: "fit-content",
 };

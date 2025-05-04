@@ -2,6 +2,7 @@ import { CSSProperties, useContext, useState } from "react";
 import { Button, Input, Select, Typography } from "antd";
 
 import { DefaultMessage } from "@/components/ui/DefaultMessage";
+import { Chevron } from "@/svgs/chevron";
 import { WalletContext } from "@/context/WalletContext";
 import {
   getAmountValidationError,
@@ -165,6 +166,7 @@ export const TokenTransfer = () => {
             onChange={handleTokenChange}
             size='large'
             status={errors.tokenName ? "error" : undefined}
+            suffixIcon={<Chevron />}
           >
             {supportedTokens.map((token) => (
               <Select.Option

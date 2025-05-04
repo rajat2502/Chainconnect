@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Image from "next/image";
-import { Button, notification, Tag, Typography } from "antd";
+import { Button, message, Tag, Typography } from "antd";
 
 import { WalletContext } from "@/context/WalletContext";
 import { OpenInNew } from "@/svgs/openInNew";
@@ -28,9 +28,7 @@ export const Header = () => {
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(account!);
-    notification.success({
-      message: "Address copied to clipboard",
-    });
+    message.success("Address copied to clipboard");
   };
 
   const handleOpenExplorer = () => {

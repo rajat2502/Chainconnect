@@ -10,10 +10,13 @@ export const Footer = () => {
       style={{
         textAlign: "center",
         height: "auto",
-        padding: "16px 0",
+        padding: "24px",
+        borderTop: "1px solid #e0e0e0",
+        backgroundColor: "white",
+        marginTop: "24px",
       }}
     >
-      <Text>© 2025 ChainConnect.</Text>
+      <Text style={{ color: "#64748b" }}>© 2025 ChainConnect.</Text>
     </AntdFooter>
   );
 };
