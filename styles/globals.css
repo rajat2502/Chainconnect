@@ -46,6 +46,7 @@ ul {
   gap: 32px;
   flex-wrap: wrap;
   padding: 48px 120px;
+  margin-bottom: 56px;
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;

@@ -62,3 +62,8 @@ pnpm start
 - **ethers.js**: For taking care of transactions and fetching the token balances
 - **ESLint**: For linting the code
 - **Vercel**: For hosting the application
+
+## Improvements possible:
+
+- Currently the transaction history functionality shows transactions made from the application itself, and not the transactions that were made independently. Ideally we should be using APIs in order to fetch the transaction history.
+- I have [implemented](https://github.com/rajat2502/Chainconnect/blob/main/src/api/index.ts#L17) the Coingecko API in order to fetch the different tokens available on the chain, but I wasn't sure where to show them, so haven't added the UI layer for it.
