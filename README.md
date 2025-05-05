@@ -61,6 +61,7 @@ pnpm start
 - **Ant Design**: For consistent design and UI components
 - **ethers.js**: For taking care of transactions and fetching the token balances
 - **ESLint**: For linting the code
+- **tenderly.co**: For creating testnet (forks) of the mainnets. For production environment, we are pointing to the mainnet.
 - **Vercel**: For hosting the application
 
 ## Improvements possible:
